@@ -39,22 +39,34 @@ def correlation(x, y):
     return covariance(x, y) / (s_x * s_y)
 
 
-# ------------最小二乘法 线性回归系数求法-----------
-def line_coef(x, y):
-    s1 = covariance(x, x) * (len(x) - 1)
-    s2 = dot(y, de_mean(x))
-    beta = s2 / s1
+# 最小二乘法
+def min_least_square(x, y):
+    num = 0.0
+    d = 0.0
+    for x_i, y_i in zip(x, y):
+        num += (x_i - mean(x)) * (y_i - mean(y))
+        d += (x_i - mean(x)) ** 2
+    beta = num/d
     alpha = mean(y) - beta * mean(x)
     return alpha, beta
 
 
+# ------------最小二乘法 线性回归系数求法-----------
+# def line_coef(x, y):
+#     s1 = covariance(x, x) * (len(x) - 1)
+#     s2 = dot(y, de_mean(x))
+#     beta = s2 / s1
+#     alpha = mean(y) - beta * mean(x)
+#     return alpha, beta
+
+
 # ******实验*****
-# 生成随机数据
-def ran(a1, a2, x):
-    return [a1 + a2 * x_i for x_i in x]
+# 生成随机数据,使用random 添加噪音
+def ran(alpha, beta, x):
+    return [alpha + beta * i + 0.2 * rdm.random() for i in x]
 
 
-a1 = 0
+a1 = 5
 a2 = 2.5
 print '实际样本系数 alpha: %f, beta: %f' % (a1, a2)
 x = range(10)
@@ -62,9 +74,9 @@ y = ran(a1, a2, x)
 print y
 
 # 线性拟合
-alpha, beta = line_coef(x, y)
+alpha_, beta_ = min_least_square(x, y)
 print '*------------------------最小二乘法------------------------*'
-print '系数为: ', alpha, beta
+print '系数为: ', alpha_, beta_
 
 
 # 可视化
@@ -77,8 +89,7 @@ plt.ylabel('y label')
 plt.title('Linear Fit')
 
 # 拟合直线
-plt.plot(x, [alpha + beta*x_i for x_i in x], color='orange')
-# plt.subplot(222)
+plt.plot(x, [alpha_ + beta_*x_i for x_i in x], color='orange')
 plt.show()
 
 
@@ -94,7 +105,7 @@ def error_total(alpha, beta, x, y):
     return dot(y1, y1)
 
 
-print '误差为: ', error_total(alpha, beta, x, y)
+print '误差为: ', error_total(alpha_, beta_, x, y)
 
 
 # 计算R方
@@ -102,7 +113,7 @@ def r_square(alpha, beta, x, y):
     return 1 - error_total(alpha, beta, x, y) / covariance(y, y)
 
 
-R_square = r_square(alpha, beta, x, y)
+R_square = r_square(alpha_, beta_, x, y)
 print 'R 方: ', R_square
 if R_square > 0.95:
     print '在0.5置信水平下，该线性拟合不错'
