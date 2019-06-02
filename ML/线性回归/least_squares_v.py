@@ -1,6 +1,9 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*
 import numpy as np
 import matplotlib.pyplot as plt
 
+# 最小二乘法向量
 x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 y = [10, 11.5, 12, 13, 14.5, 15.5, 16.8, 17.3, 18, 18.7]
 
